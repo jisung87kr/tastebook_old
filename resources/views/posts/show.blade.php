@@ -11,7 +11,7 @@
         <div>{{$post->content}}</div>
     </div>
     <div class="text-end">
-        @if(auth()->user()->can('update', $post))
+        @can('update', $post))
         <a href="{{route('posts.edit', ['post' => $post->id ])}}" class="btn btn-secondary">수정</a>
         <a href="{{route('posts.destroy', ['post' => $post->id ])}}" class="btn btn-secondary" onclick="event.preventDefault();
         document.getElementById('form-delete').submit();
