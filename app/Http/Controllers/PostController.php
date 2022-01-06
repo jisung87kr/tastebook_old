@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePostRequest;
 
 class PostController extends Controller
@@ -18,9 +19,19 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::orderBy('created_at', 'desc')->paginate();
+        $sorting = makeSort(Post::$allowSortings, $request->all());
+        $orderByRaw = makeOrderByRaw($sorting);
+        $orderByRaw = ( $orderByRaw ) ? $orderByRaw : 'created_at desc';
+//        $posts = Post::with('user')->orderByRaw($orderByRaw)->paginate();
+
+        $posts = DB::table('posts')
+            ->join('users', 'posts.user_id', '=', 'users.id')
+            ->select('posts.*', 'users.name')
+            ->orderByRaw($orderByRaw)
+            ->paginate();
+
         return view('posts.index', compact('posts'));
     }
 

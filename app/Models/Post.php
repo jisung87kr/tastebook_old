@@ -11,6 +11,12 @@ class Post extends Model
 
     public $fillable = ['user_id', 'subject', 'content'];
 
+    public static $allowSortings = [
+        'id',
+        'created_at',
+        'name',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
